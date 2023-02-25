@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Sierpiński plots</title>
+  <style>
+    #canvas {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas" width="800" height="800"></canvas>
+  <div id="info"></div>
+</body>
+<script>
+  const canvas = document.getElementById("canvas");
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  const ctx = canvas.getContext("2d");
+  const canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+
+  function drawPixel(x, y, r, g, b, a) {
+    var index = (x + y * canvasWidth) * 4;
+    canvasData.data[index + 0] = r;
+    canvasData.data[index + 1] = g;
+    canvasData.data[index + 2] = b;
+    canvasData.data[index + 3] = a;
+  }
+
+  function updateCanvas() {
+    ctx.putImageData(canvasData, 0, 0);
+  }
+
+  function generateImage(numCorners, moveWeight) {
+    const corners = [...Array(numCorners)].map((_, i) => {
+      const angle = 2 * Math.PI * i / numCorners;
+      return [canvasWidth * (Math.sin(angle) + 1) / 2, canvasHeight * (1 - Math.cos(angle)) / 2];
+    });
+
+    const getRCorner = () => corners[Math.floor(Math.random() * corners.length)];
+
+    let p = [canvasWidth / 2, canvasHeight / 2];
+
+    const i = setInterval(() => {
+      for (let i = 0; i < 10000; i++) {
+        drawPixel(Math.floor(p[0]), Math.floor(p[1]), 0, 0, 0, 255);
+        const corner = getRCorner();
+        p = [moveWeight * p[0] + (1 - moveWeight) * corner[0], moveWeight * p[1] + (1 - moveWeight) * corner[1]];
+      }
+      updateCanvas();
+    }, 10);
+
+    setTimeout(() => {
+      clearInterval(i);
+    }, 10000);
+  }
+
+
+  const numCorners = 3;
+  const moveWeight = 1 / 2;
+
+  document.getElementById("info").innerHTML = `
+corners: ${numCorners}
+<br/>
+weight: ${moveWeight}`;
+
+  generateImage(numCorners, moveWeight);
+
+</script>
+
+</html>
