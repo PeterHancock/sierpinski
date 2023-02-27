@@ -5,34 +5,36 @@
   <meta charset="utf-8">
   <title>Sierpiński plots</title>
   <style>
-    #canvas {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 1200;
-      height: 1200;
+    #container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-@media only screen and (min-width: 768px) {
-  #canvas {
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      width: 800;
-      height: 800;
+    #canvas {
+      width: 75%;
     }
-}
+
+    #canvas:after {
+      content: "";
+      display: block;
+      padding-bottom: 100%;
+    }
   </style>
 </head>
 
 <body>
   <div id="info"></div>
-  <canvas id="canvas" width="1200" height="1200"></canvas>
+  <div id="container">
+    <canvas id="canvas" width="2500" height="2500"></canvas>
+  </div>
 </body>
 <script>
   const canvas = document.getElementById("canvas");
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
+
+  console.log(canvasWidth, canvasHeight);
   const ctx = canvas.getContext("2d");
   const canvasData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
 
@@ -73,13 +75,13 @@
   }
 
 
-  const params =  new URL(window.location.href).searchParams
+  const params = new URL(window.location.href).searchParams
 
 
   const numCorners = parseInt(params.get('n')) || 3;
 
   const moveWeight = parseFloat(
-    params.get('m') || (params.get('mn') && params.get('md') && params.get('mn') / params.get('md') ) || 1/2
+    params.get('m') || (params.get('mn') && params.get('md') && params.get('mn') / params.get('md')) || 1 / 2
   );
   console.log(`
   Url params:
