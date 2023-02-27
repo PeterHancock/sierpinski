@@ -9,14 +9,14 @@
       display: block;
       margin-left: auto;
       margin-right: auto;
-      width: 50%;
+      width: 45%;
     }
   </style>
 </head>
 
 <body>
-  <canvas id="canvas" width="800" height="800"></canvas>
   <div id="info"></div>
+  <canvas id="canvas" width="800" height="800"></canvas>
 </body>
 <script>
   const canvas = document.getElementById("canvas");
@@ -62,8 +62,23 @@
   }
 
 
-  const numCorners = 3;
-  const moveWeight = 1 / 2;
+  const params =  new URL(window.location.href).searchParams
+
+
+  const numCorners = parseInt(params.get('n')) || 3;
+
+  const moveWeight = parseFloat(
+    params.get('m') || (params.get('mn') && params.get('md') && params.get('mn') / params.get('md') ) || 1/2
+  );
+  console.log(`
+  Url params:
+
+    n: number of corners
+    
+    m: move weight 
+    - or -
+    mn, md: move weight = mn/md
+  `);
 
   document.getElementById("info").innerHTML = `
 corners: ${numCorners}
